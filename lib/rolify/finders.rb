@@ -1,7 +1,7 @@
 module Rolify
   module Finders
     def with_role(role_name, resource = nil)
-      self.adapter.scope(self, :name => role_name, :resource => resource)
+      self.role_adapter.scope(self, :name => role_name, :resource => resource)
     end
 
     def with_all_roles(*args)
@@ -22,9 +22,9 @@ module Rolify
       users.uniq
     end
   end
-  
+
   private
-  
+
   def parse_args(args, users, &block)
     args.each do |arg|
       if arg.is_a? Hash

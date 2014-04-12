@@ -9,7 +9,7 @@ require 'rolify/adapters/base'
 module Rolify
   extend Configure
 
-  attr_accessor :role_cname, :adapter, :role_join_table_name, :role_table_name
+  attr_accessor :role_cname, :role_adapter, :resource_adapter, :role_join_table_name, :role_table_name
 
   def rolify(options = {})
     include Role
@@ -29,7 +29,7 @@ module Rolify
 
     has_and_belongs_to_many :roles, rolify_options
 
-    self.adapter = Rolify::Adapter::Base.create("role_adapter", self.role_cname, self.name)
+    self.role_adapter = Rolify::Adapter::Base.create("role_adapter", self.role_cname, self.name)
     load_dynamic_methods if Rolify.dynamic_shortcuts
   end
 
@@ -43,7 +43,7 @@ module Rolify
 
     has_many association_name, resourcify_options
 
-    self.adapter = Rolify::Adapter::Base.create("resource_adapter", self.role_cname, self.name)
+    self.resource_adapter = Rolify::Adapter::Base.create("resource_adapter", self.role_cname, self.name)
   end
 
   def scopify
