@@ -11,6 +11,7 @@ module Rolify
         roles = roles.where(:name => role_name.to_s) if role_name && (role_name != :any)
         roles
       end
+      alias :resource_find_roles :find_roles
 
       def with_role(role_name, user = nil)
         if role_name.is_a? Array
@@ -22,6 +23,8 @@ module Rolify
         user ? self.resource_adapter.in(resources, user, role_name) : resources
       end
       alias :with_roles :with_role
+      alias :resource_with_role :with_role
+      alias :resource_with_roles :with_role
     end
 
     def applied_roles
