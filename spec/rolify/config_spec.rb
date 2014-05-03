@@ -47,7 +47,7 @@ describe Rolify do
         
         subject { ARUser }
         
-        its("adapter.class") { should be(Rolify::Adapter::RoleAdapter) }
+        its("role_adapter.class") { should be(Rolify::Adapter::RoleAdapter) }
       end
       
       context "on the Forum class" do
@@ -57,7 +57,7 @@ describe Rolify do
         
         subject { Forum }
         
-        its("adapter.class") { should be(Rolify::Adapter::ResourceAdapter) }
+        its("resource_adapter.class") { should be(Rolify::Adapter::ResourceAdapter) }
       end
     end
 
@@ -185,7 +185,7 @@ describe Rolify do
       subject { Forum }
       
       it { should satisfy { |u| u.include? Rolify::Resource }}
-      its("adapter.class") { should be(Rolify::Adapter::ResourceAdapter) }
+      its("resource_adapter.class") { should be(Rolify::Adapter::ResourceAdapter) }
     end
   end
 end
