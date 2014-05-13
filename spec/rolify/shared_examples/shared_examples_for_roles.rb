@@ -35,6 +35,7 @@ shared_examples_for Rolify::Role do
     
     it { should respond_to(:has_role?).with(1).arguments }
     it { should respond_to(:has_role?).with(2).arguments }
+    it { should respond_to(:has_role?).with(3).arguments }
 
     it { should respond_to(:has_all_roles?) }
     it { should respond_to(:has_all_roles?) }

@@ -3,6 +3,7 @@ shared_examples_for :finders do |param_name, param_method|
     describe ".with_role" do
       it { should respond_to(:with_role).with(1).argument }
       it { should respond_to(:with_role).with(2).arguments }
+      it { should respond_to(:with_role).with(3).arguments }
 
       context "with a global role" do
         it { subject.with_role("admin".send(param_method)).should eq([ root ]) }
@@ -24,6 +25,21 @@ shared_examples_for :finders do |param_name, param_method|
         end
       end
 
+      context "with a class scoped, any instance role" do
+        context "on Forum class" do
+          it { subject.with_role("admin".send(param_method), Forum, :any).should eq([ root ]) }
+          it { subject.with_role("moderator".send(param_method), Forum, :any).should eq([ modo ]) }
+          it { subject.with_role("visitor".send(param_method), Forum, :any).should include( root, visitor ) }
+          it { subject.with_role("visitor".send(param_method), Forum, :any).should have(2).items }
+        end
+
+        context "on Group class" do
+          it { subject.with_role("admin".send(param_method), Group, :any).should eq([ root ]) }
+          it { subject.with_role("moderator".send(param_method), Group, :any).should eq([ root ]) }
+          it { subject.with_role("visitor".send(param_method), Group, :any).should eq([ modo ]) }
+        end
+      end
+
       context "with an instance scoped role" do
         context "on Forum.first instance" do
           it { subject.with_role("admin".send(param_method), Forum.first).should eq([ root ]) }
@@ -35,12 +51,23 @@ shared_examples_for :finders do |param_name, param_method|
           it { subject.with_role("admin".send(param_method), Forum.last).should eq([ root ]) }
           it { subject.with_role("moderator".send(param_method), Forum.last).should eq([ modo ]) }
           it { subject.with_role("visitor".send(param_method), Forum.last).should include(root, visitor) } # =~ doesn't pass using mongoid, don't know why...
+          it { subject.with_role("visitor".send(param_method), Forum.last).should have(2).items }
         end
 
         context "on Group.first instance" do
           it { subject.with_role("admin".send(param_method), Group.first).should eq([ root ]) }
           it { subject.with_role("moderator".send(param_method), Group.first).should eq([ root ]) }
           it { subject.with_role("visitor".send(param_method), Group.first).should eq([ modo ]) }
+        end
+      end
+
+      context "with an any-resource scoped role" do
+        context "on Forum class" do
+          it { subject.with_role("admin".send(param_method), :any).should eq([ root ]) }
+          it { subject.with_role("moderator".send(param_method), :any).should include( root, modo ) }
+          it { subject.with_role("moderator".send(param_method), :any).should have(2).items }
+          it { subject.with_role("visitor".send(param_method), :any).should include(root, modo, visitor) }
+          it { subject.with_role("visitor".send(param_method), :any).should have(3).items }
         end
       end
     end

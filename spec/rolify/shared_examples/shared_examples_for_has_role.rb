@@ -5,6 +5,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
 
       context "on resource request" do
         it { subject.has_role?("admin".send(param_method), Forum.first).should be_true }
+        it { subject.has_role?("admin".send(param_method), Forum, :any).should be_true }
         it { subject.has_role?("admin".send(param_method), Forum).should be_true }
         it { subject.has_role?("admin".send(param_method), :any).should be_true }
       end
@@ -14,10 +15,12 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
 
         it { subject.has_role?("global".send(param_method)).should be_false }
         it { subject.has_role?("global".send(param_method), :any).should be_false }
+        it { subject.has_role?("global".send(param_method), Forum, :any).should be_false }
       end
 
       it "should not get an instance scoped role" do
         subject.has_role?("moderator".send(param_method), Group.first).should be_false
+        subject.has_role?("anonymous".send(param_method), Group, :any).should be_false
       end
 
       it "should not get a class scoped role" do
@@ -27,6 +30,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
       context "using inexisting role" do
         it { subject.has_role?("dummy".send(param_method)).should be_false }
         it { subject.has_role?("dumber".send(param_method), Forum.first).should be_false }
+        it { subject.has_role?("dumbest".send(param_method), Forum, :any).should be_false }
       end
     end
 
@@ -34,6 +38,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
       context "on class scoped role request" do
         it { subject.has_role?("manager".send(param_method), Forum).should be_true }
         it { subject.has_role?("manager".send(param_method), Forum.first).should be_true }
+        it { subject.has_role?("manager".send(param_method), Forum, :any).should be_true }
         it { subject.has_role?("manager".send(param_method), :any).should be_true }
       end
 
@@ -51,6 +56,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "member", :resource_type => "Forum") }
 
           it { subject.has_role?("member".send(param_method), Forum).should be_false }
+          it { subject.has_role?("member".send(param_method), Forum, :any).should be_false }
           it { subject.has_role?("member".send(param_method), :any).should be_false }
         end
 
@@ -58,6 +64,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "manager", :resource_type => "Group") }
 
           it { subject.has_role?("manager".send(param_method), Group).should be_false }
+          it { subject.has_role?("manager".send(param_method), Group, :any).should be_false }
           it { subject.has_role?("manager".send(param_method), :any).should be_true }
         end
 
@@ -65,6 +72,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "defenders", :resource_type => "Group") }
 
           it { subject.has_role?("defenders".send(param_method), Group).should be_false }
+          it { subject.has_role?("defenders".send(param_method), Group, :any).should be_false }
           it { subject.has_role?("defenders".send(param_method), :any).should be_false }
         end
       end
@@ -72,12 +80,14 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
       context "using inexisting role" do
         it { subject.has_role?("dummy".send(param_method), Forum).should be_false }
         it { subject.has_role?("dumber".send(param_method)).should be_false }
+        it { subject.has_role?("dumbest".send(param_method), Forum, :any).should be_false }
       end
     end
 
     context "with a instance scoped role", :scope => :instance do
       context "on instance scoped role request" do
         it { subject.has_role?("moderator".send(param_method), Forum.first).should be_true }
+        it { subject.has_role?("moderator".send(param_method), Forum, :any).should be_true }
         it { subject.has_role?("moderator".send(param_method), :any).should be_true }
       end
 
@@ -99,6 +109,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "member", :resource => Forum.first) }
 
           it { subject.has_role?("member".send(param_method), Forum.first).should be_false }
+          it { subject.has_role?("member".send(param_method), Forum, :any).should be_false }
           it { subject.has_role?("member".send(param_method), :any).should be_false }
         end
 
@@ -106,6 +117,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "moderator", :resource => Forum.last) }
 
           it { subject.has_role?("moderator".send(param_method), Forum.last).should be_false }
+          it { subject.has_role?("moderator".send(param_method), Forum, :any).should be_true }
           it { subject.has_role?("moderator".send(param_method), :any).should be_true }
         end
 
@@ -113,6 +125,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "moderator", :resource => Group.last) }
 
           it { subject.has_role?("moderator".send(param_method), Group.last).should be_false }
+          it { subject.has_role?("moderator".send(param_method), Group, :any).should be_false }
           it { subject.has_role?("moderator".send(param_method), :any).should be_true }
         end
 
@@ -120,6 +133,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "member", :resource => Forum.last) }
 
           it { subject.has_role?("member".send(param_method), Forum.last).should be_false }
+          it { subject.has_role?("member".send(param_method), Forum, :any).should be_false }
           it { subject.has_role?("member".send(param_method), :any).should be_false }
         end
 
@@ -127,6 +141,7 @@ shared_examples_for "#has_role?_examples" do |param_name, param_method|
           before(:all) { role_class.create(:name => "member", :resource => Group.first) }
 
           it { subject.has_role?("member".send(param_method), Group.first).should be_false }
+          it { subject.has_role?("member".send(param_method), Group, :any).should be_false }
           it { subject.has_role?("member".send(param_method), :any).should be_false }
         end
       end

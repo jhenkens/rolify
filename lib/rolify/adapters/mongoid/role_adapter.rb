@@ -62,7 +62,7 @@ module Rolify
         conditions = []
         args.each do |arg|
           if arg.is_a? Hash
-            query = build_query(arg[:name], arg[:resource])
+            query = build_query(arg[:name], arg[:resource], (arg.has_key? :any_instance) ? arg[:any_instance] : false )
           elsif arg.is_a?(String) || arg.is_a?(Symbol)
             query = build_query(arg)
           else
@@ -73,13 +73,17 @@ module Rolify
         conditions
       end
 
-      def build_query(role, resource = nil)
+      def build_query(role, resource = nil, any_instance = false)
         return [{ :name => role }] if resource == :any
         query = [{ :name => role, :resource_type => nil, :resource_id => nil }]
         if resource
-          query << { :name => role, :resource_type => (resource.is_a?(Class) ? resource.to_s : resource.class.name), :resource_id => nil }
-          if !resource.is_a? Class
-            query << { :name => role, :resource_type => resource.class.name, :resource_id => resource.id }
+          if any_instance
+            query << { :name => role, :resource_type => (resource.is_a?(Class) ? resource.to_s : resource.class.name)}
+          else
+            query << { :name => role, :resource_type => (resource.is_a?(Class) ? resource.to_s : resource.class.name), :resource_id => nil }
+            if !resource.is_a? Class
+              query << { :name => role, :resource_type => resource.class.name, :resource_id => resource.id }
+            end
           end
         end
         query
