@@ -22,13 +22,13 @@ module Rolify
     alias_method :grant, :add_role
     deprecate :has_role, :add_role
 
-    def has_role?(role_name, resource = nil)
+    def has_role?(role_name, resource = nil, any_instance = false)
       if new_record?
         self.roles.detect { |r| r.name == role_name.to_s && ((resource == :any) ||
         (r.resource.nil? && (r.resource_type.nil? || (r.resource_type == resource.class.to_s))) ||
         (r.resource == resource))}.present?
       else
-        self.class.role_adapter.where(self.roles, :name => role_name, :resource => resource).size > 0
+        self.class.role_adapter.where(self.roles, :name => role_name, :resource => resource, :any_instance => any_instance).size > 0
       end
     end
 

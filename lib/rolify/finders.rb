@@ -1,7 +1,7 @@
 module Rolify
   module Finders
-    def with_role(role_name, resource = nil)
-      self.role_adapter.scope(self, :name => role_name, :resource => resource)
+    def with_role(role_name, resource = nil, any_instance = false)
+      self.role_adapter.scope(self, :name => role_name, :resource => resource, :any_instance => any_instance)
     end
 
     def with_all_roles(*args)
