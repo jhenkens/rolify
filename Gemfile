@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 group :test do
+  gem "rspec", "~> 2.99.0"
   case ENV["ADAPTER"]
   when nil, "active_record"
     gem "activerecord-jdbcsqlite3-adapter", ">= 1.3.0.rc", :platform => "jruby"
